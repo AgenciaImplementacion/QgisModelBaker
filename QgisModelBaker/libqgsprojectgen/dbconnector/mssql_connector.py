@@ -126,6 +126,7 @@ class MssqlConnector(DBConnector):
                 stmt += ln + "        ) AS extent"
                 stmt += ln + "    , tgeomtype.setting AS simple_type"
                 stmt += ln + "    , null AS formatted_type"
+                stmt += ln + "    , dim.setting as coord_dimension"
             stmt += ln + "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS Tab"
             stmt += ln + "INNER JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS Col"
             stmt += ln + "    ON Col.Constraint_Name = Tab.Constraint_Name"
@@ -157,6 +158,11 @@ class MssqlConnector(DBConnector):
                 stmt += ln + "    ON tbls.TABLE_NAME = tgeomtype.tablename"
                 stmt += ln + "    AND clm.COLUMN_NAME = tgeomtype.columnname"
                 stmt += ln + "    AND tgeomtype.tag= 'ch.ehi.ili2db.geomType'"
+                stmt += ln + "LEFT JOIN {schema}.T_ILI2DB_COLUMN_PROP AS dim"
+                stmt += ln + "    ON tbls.TABLE_NAME = dim.tablename"
+                stmt += ln + "    AND clm.COLUMN_NAME = dim.columnname"
+                stmt += ln + "    AND dim.tag= 'ch.ehi.ili2db.coordDimension'"
+
             stmt += ln + "WHERE tbls.TABLE_TYPE = 'BASE TABLE' AND tbls.TABLE_SCHEMA = '{schema}'"
             stmt = stmt.format(schema=self.schema)
 
@@ -173,6 +179,8 @@ class MssqlConnector(DBConnector):
                     my_rec = dict(zip(columns, row))
                     my_rec['srid'] = int(my_rec['srid']) if my_rec['srid'] else None
                     my_rec['type'] = my_rec['simple_type']
+                    if my_rec['type'] is not None and my_rec['coord_dimension'] == "3":
+                        my_rec['type'] += 'Z'
                     res.append(my_rec)
 
         return res
@@ -475,7 +483,7 @@ WHERE TABLE_SCHEMA='{schema}'
                        AND(COLUMN_NAME='owner' OR COLUMN_NAME='file')""".format(schema=self.schema))
 
         res = cur.fetchone()[0]
-        print(res)
+        
         if res > 0:
             self.new_message.emit(Qgis.Warning, "DB schema created with ili2db version 3. Better use version 4.")
             return 3
