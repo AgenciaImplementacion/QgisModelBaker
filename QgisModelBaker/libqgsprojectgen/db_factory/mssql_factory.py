@@ -60,8 +60,12 @@ class MssqlFactory(DbFactory):
         """
         return 'https://github.com/SwissTierrasColombia/ili2db/releases/download/ili2mssql-{version}/ili2mssql-{version}.zip'.format(version=self.get_tool_version(db_ili_version))
 
-    def customize_widget_editor(self, field: Field, data_type: str):
+    def customize_widget_editor(self, field: Field, data_type: str, fielddef: dict):
         if 'bit' in data_type:
             field.widget = 'CheckBox'
             field.widget_config['CheckedState'] = '1'
             field.widget_config['UncheckedState'] = '0'
+
+        if 'mandatory' in fielddef and fielddef['mandatory']:
+            field.mandatory = True
+            field.widget_config['allow_null'] = False
