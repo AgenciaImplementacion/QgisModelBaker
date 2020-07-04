@@ -60,5 +60,6 @@ class Field:
             default_value = QgsDefaultValue(self.default_value_expression)
             layer.layer.setDefaultValueDefinition(field_idx, default_value)
 
+        # Additionally, some DB engines like MSSQL require NotNull constraints being set explicitly
         if self.mandatory:
             layer.layer.setFieldConstraint(field_idx, QgsFieldConstraints.ConstraintNotNull)
