@@ -143,6 +143,7 @@ class ExportConfiguration(Ili2DbCommandConfiguration):
         self.disable_validation = False
         self.with_exporttid = False
         self.db_ili_version = None
+        self.baskets = ''
 
     def to_ili2db_args(self, extra_args=[], with_action=True):
         args = list()
@@ -163,6 +164,9 @@ class ExportConfiguration(Ili2DbCommandConfiguration):
 
         if self.db_ili_version == 3:
             args += ["--export3"]
+
+        if self.baskets:
+            args += ["--baskets", self.baskets]
 
         args += Ili2DbCommandConfiguration.to_ili2db_args(self)
 
@@ -259,6 +263,7 @@ class ImportDataConfiguration(SchemaImportConfiguration):
         self.delete_data = False
         self.disable_validation = False
         self.with_importtid = False
+        self.baskets = ''
 
     def to_ili2db_args(self, extra_args=[], with_action=True):
         args = list()
@@ -277,6 +282,9 @@ class ImportDataConfiguration(SchemaImportConfiguration):
 
         if self.with_importtid:
             args += ["--importTid"]
+
+        if self.baskets:
+            args += ["--baskets", self.baskets]
 
         args += SchemaImportConfiguration.to_ili2db_args(self, extra_args=extra_args, with_action=False)
 
