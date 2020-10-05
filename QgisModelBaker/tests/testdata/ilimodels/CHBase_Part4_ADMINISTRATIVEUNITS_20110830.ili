@@ -73,7 +73,7 @@ MODEL AdministrativeUnits_V1 (en)
 
   END AdministrativeUnits;
 
-  TOPIC Countries EXTENDS AdministrativeUnits =
+  TOPIC Countries (ABSTRACT) EXTENDS AdministrativeUnits =
 
     CLASS Country EXTENDS AdministrativeUnit =
       Code: MANDATORY CountryCode_ISO3166_1;
@@ -130,7 +130,7 @@ MODEL AdministrativeUnitsCH_V1 (en)
   IMPORTS LocalisationCH_V1;
   IMPORTS AdministrativeUnits_V1;
 
-  TOPIC CHCantons EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
+  TOPIC CHCantons (ABSTRACT) EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
     DEPENDS ON AdministrativeUnits_V1.Countries;
 
     CLASS CHCanton EXTENDS AdministrativeUnit =
@@ -149,7 +149,7 @@ MODEL AdministrativeUnitsCH_V1 (en)
 
   END CHCantons;
 
-  TOPIC CHDistricts EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
+  TOPIC CHDistricts (ABSTRACT) EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
     DEPENDS ON AdministrativeUnitsCH_V1.CHCantons;
 
     CLASS CHDistrict EXTENDS AdministrativeUnit =
@@ -166,7 +166,7 @@ MODEL AdministrativeUnitsCH_V1 (en)
 
   END CHDistricts;
 
-  TOPIC CHMunicipalities EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
+  TOPIC CHMunicipalities (ABSTRACT) EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
     DEPENDS ON AdministrativeUnitsCH_V1.CHCantons;
     DEPENDS ON AdministrativeUnitsCH_V1.CHDistricts;
 
@@ -185,7 +185,7 @@ MODEL AdministrativeUnitsCH_V1 (en)
 
   END CHMunicipalities;
 
-  TOPIC CHAdministrativeUnions EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
+  TOPIC CHAdministrativeUnions (ABSTRACT) EXTENDS AdministrativeUnits_V1.AdministrativeUnits =
     DEPENDS ON AdministrativeUnits_V1.Countries;
     DEPENDS ON AdministrativeUnitsCH_V1.CHCantons;
     DEPENDS ON AdministrativeUnitsCH_V1.CHDistricts;
